@@ -5,8 +5,6 @@ from __future__ import annotations
 import textwrap
 from pathlib import Path
 
-import pytest
-
 from failfast.discovery import discover_tests, node_id_to_file
 
 

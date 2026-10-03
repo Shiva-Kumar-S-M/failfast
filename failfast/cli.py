@@ -146,8 +146,7 @@ def cmd_map(repo: str, source: str | None, as_json: bool) -> None:
             {
                 "node_id": e.node_id,
                 "files": {
-                    path: sorted(lines)
-                    for path, lines in e.executed_lines.items()
+                    path: sorted(lines) for path, lines in e.executed_lines.items()
                 },
             }
             for e in entries

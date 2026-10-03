@@ -1,18 +1,19 @@
-"""Tests for failfast.store – SQLite store layer."""
-
 from __future__ import annotations
 
+import sqlite3
 import time
+from collections.abc import Generator
 
 import pytest
 
-from failfast.store import ResultRecord, RunRecord, Store, TestRecord
+from failfast.store import ResultRecord, RunRecord, Store
 
 
 @pytest.fixture()
-def store() -> Store:
+def store() -> Generator[Store, None, None]:
     """In-memory store, fresh for each test."""
-    return Store(":memory:")
+    with Store(":memory:") as s:
+        yield s
 
 
 class TestCreateRun:
@@ -72,7 +73,9 @@ class TestListRuns:
 class TestUpsertResult:
     def test_basic_upsert(self, store: Store) -> None:
         run_id = store.create_run("sha1", "main")
-        result_id = store.upsert_result(run_id, "tests/test_foo.py::test_bar", "passed", 0.5)
+        result_id = store.upsert_result(
+            run_id, "tests/test_foo.py::test_bar", "passed", 0.5
+        )
         assert isinstance(result_id, int)
 
     def test_idempotent_update(self, store: Store) -> None:
@@ -88,14 +91,16 @@ class TestUpsertResult:
 
     def test_all_valid_outcomes(self, store: Store) -> None:
         run_id = store.create_run("sha1", "main")
-        for i, outcome in enumerate(["passed", "failed", "error", "skipped", "xfailed", "xpassed"]):
+        for i, outcome in enumerate(
+            ["passed", "failed", "error", "skipped", "xfailed", "xpassed"]
+        ):
             store.upsert_result(run_id, f"tests/test_{i}.py::test_{i}", outcome, 0.1)
         results = store.get_results_for_run(run_id)
         assert len(results) == 6
 
     def test_invalid_outcome_raises(self, store: Store) -> None:
         run_id = store.create_run("sha1", "main")
-        with pytest.raises(Exception):
+        with pytest.raises(sqlite3.IntegrityError):
             store.upsert_result(run_id, "tests/test_foo.py::test_bar", "INVALID", 0.0)
 
 
@@ -142,5 +147,5 @@ class TestStoreContextManager:
             run_id = s.create_run("sha", "main")
             assert s.get_run(run_id) is not None
         # After close, further operations should raise
-        with pytest.raises(Exception):
+        with pytest.raises(sqlite3.ProgrammingError):
             s.get_run(run_id)

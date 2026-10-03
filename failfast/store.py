@@ -5,11 +5,10 @@ from __future__ import annotations
 import importlib.resources
 import sqlite3
 import time
+from collections.abc import Generator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Generator
-
 
 # ---------------------------------------------------------------------------
 # Public data transfer objects
@@ -41,6 +40,8 @@ class TestRecord:
         id: Auto-assigned primary key.
         node_id: The pytest node ID (e.g. ``tests/test_foo.py::test_bar``).
     """
+
+    __test__ = False
 
     id: int
     node_id: str
@@ -287,9 +288,7 @@ class Store:
             for row in rows
         ]
 
-    def get_test_history(
-        self, node_id: str, *, limit: int = 50
-    ) -> list[ResultRecord]:
+    def get_test_history(self, node_id: str, *, limit: int = 50) -> list[ResultRecord]:
         """Return the most recent results for a test, newest run first.
 
         Args:
@@ -326,7 +325,7 @@ class Store:
         """Close the underlying database connection."""
         self._conn.close()
 
-    def __enter__(self) -> "Store":
+    def __enter__(self) -> Store:
         return self
 
     def __exit__(self, *_: object) -> None:

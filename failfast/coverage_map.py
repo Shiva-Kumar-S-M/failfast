@@ -136,8 +136,8 @@ def _inline_cov_config(data_file: Path) -> str:
     Returns:
         Path string of the written config file.
     """
-    import tempfile as tf
     import os
+    import tempfile as tf
 
     fd, path = tf.mkstemp(suffix=".ini", prefix="failfast_cov_")
     os.close(fd)

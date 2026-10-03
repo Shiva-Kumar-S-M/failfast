@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 import json
-import textwrap
 from pathlib import Path
 
 import pytest
 
-from failfast.coverage_map import CoverageEntry, filter_by_changed_files, _parse_json_report
-
+from failfast.coverage_map import (
+    CoverageEntry,
+    _parse_json_report,
+    filter_by_changed_files,
+)
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -49,7 +51,9 @@ def sample_coverage_json(tmp_path: Path) -> Path:
 
 
 class TestParseJsonReport:
-    def test_returns_list_of_entries(self, sample_coverage_json: Path, tmp_path: Path) -> None:
+    def test_returns_list_of_entries(
+        self, sample_coverage_json: Path, tmp_path: Path
+    ) -> None:
         entries = _parse_json_report(sample_coverage_json, Path("/repo"))
         assert isinstance(entries, list)
         assert all(isinstance(e, CoverageEntry) for e in entries)

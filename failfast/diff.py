@@ -18,9 +18,7 @@ _FROM_LINE = re.compile(r"^(?:rename|copy) from (.+)$")
 _TO_LINE = re.compile(r"^(?:rename|copy) to (.+)$")
 
 # Matches hunk headers: "@@ -old_start[,old_count] +new_start[,new_count] @@"
-_HUNK_HEADER = re.compile(
-    r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@"
-)
+_HUNK_HEADER = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
 
 
 def _classify(lines: list[str]) -> str:

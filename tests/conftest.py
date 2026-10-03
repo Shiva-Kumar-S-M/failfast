@@ -17,9 +17,21 @@ def mini_repo(tmp_path: Path) -> Path:
         Path to the repository root.
     """
     # Initialise git repo
-    subprocess.run(["git", "init", "-b", "main"], cwd=tmp_path, check=True, capture_output=True)
-    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=tmp_path, check=True, capture_output=True)
-    subprocess.run(["git", "config", "user.name", "Tester"], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "init", "-b", "main"], cwd=tmp_path, check=True, capture_output=True
+    )
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "Tester"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+    )
 
     # Source file
     src = tmp_path / "mylib.py"

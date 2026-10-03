@@ -11,7 +11,6 @@ import pytest
 from failfast.diff import diff_refs, parse_diff_text
 from failfast.models import ChangedFile
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -26,7 +25,7 @@ SIMPLE_DIFF = textwrap.dedent("""\
     -    return "hello"
     +    return "hi"
     +    # changed
-     
+
      def bye():
 """)
 
@@ -154,7 +153,9 @@ class TestDiffRefs:
         # Modify the source file and commit
         src = mini_repo / "mylib.py"
         src.write_text("def add(a, b):\n    return a + b + 1\n", encoding="utf-8")
-        subprocess.run(["git", "add", "."], cwd=mini_repo, check=True, capture_output=True)
+        subprocess.run(
+            ["git", "add", "."], cwd=mini_repo, check=True, capture_output=True
+        )
         subprocess.run(
             ["git", "commit", "-m", "Modify add"],
             cwd=mini_repo,
@@ -169,7 +170,9 @@ class TestDiffRefs:
     def test_added_file_appears(self, mini_repo: Path) -> None:
         new_file = mini_repo / "extra.py"
         new_file.write_text("x = 1\n", encoding="utf-8")
-        subprocess.run(["git", "add", "."], cwd=mini_repo, check=True, capture_output=True)
+        subprocess.run(
+            ["git", "add", "."], cwd=mini_repo, check=True, capture_output=True
+        )
         subprocess.run(
             ["git", "commit", "-m", "Add extra"],
             cwd=mini_repo,
