@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from pathlib import Path
 
 
@@ -34,10 +35,12 @@ def discover_tests(
         FileNotFoundError: If ``pytest`` is not on PATH.
     """
     cmd: list[str] = [
-        "python",
+        sys.executable,
         "-m",
         "pytest",
         "--collect-only",
+        "-o",
+        "addopts=",
         "-q",
         "--no-header",
     ]

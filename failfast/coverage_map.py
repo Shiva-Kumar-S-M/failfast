@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -63,7 +64,7 @@ def build_coverage_map(
 
         # Step 1: Run pytest with coverage contexts enabled
         cmd: list[str] = [
-            "python",
+            sys.executable,
             "-m",
             "pytest",
             f"--cov={src}",
@@ -99,7 +100,7 @@ def build_coverage_map(
         # Step 2: Export to JSON so we can parse context-aware data
         export_result = subprocess.run(
             [
-                "python",
+                sys.executable,
                 "-m",
                 "coverage",
                 "json",
