@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import dataclasses
 from pathlib import Path
 
 import pytest
@@ -154,5 +155,5 @@ class TestComputeImportDistances:
 
     def test_import_graph_features_are_frozen(self) -> None:
         feat = ImportGraphFeatures(node_id="t::t", import_distance=5)
-        with pytest.raises(Exception):
+        with pytest.raises(dataclasses.FrozenInstanceError):
             feat.import_distance = 0  # type: ignore[misc]

@@ -6,6 +6,7 @@ data from after the before_timestamp cutoff (leakage prevention).
 
 from __future__ import annotations
 
+import dataclasses
 import time
 
 import pytest
@@ -202,12 +203,12 @@ class TestComputeHistoryFeatures:
             "Leakage detected: the future failing run was included in feature "
             f"computation. failure_rate={f.failure_rate} but should be 0.0."
         )
-        assert f.recent_failure_count == 0, (
-            "Leakage detected: future run counted in recent failures."
-        )
-        assert f.runs_since_last_failure == N_RUNS_SENTINEL, (
-            "Leakage detected: future failure affected runs_since_last_failure."
-        )
+        assert (
+            f.recent_failure_count == 0
+        ), "Leakage detected: future run counted in recent failures."
+        assert (
+            f.runs_since_last_failure == N_RUNS_SENTINEL
+        ), "Leakage detected: future failure affected runs_since_last_failure."
 
     def test_cutoff_is_strictly_less_than(self) -> None:
         """A run at exactly the cutoff timestamp must NOT be included."""
@@ -237,7 +238,7 @@ class TestComputeHistoryFeatures:
             avg_duration=0.0,
             last_duration=0.0,
         )
-        with pytest.raises(Exception):
+        with pytest.raises(dataclasses.FrozenInstanceError):
             feat.failure_rate = 1.0  # type: ignore[misc]
 
     def test_error_outcome_counts_as_failure(self) -> None:

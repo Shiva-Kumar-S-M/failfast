@@ -88,7 +88,9 @@ class TestBuildFeatures:
         entries = [make_entry("tests/t.py::test_x", {"src/foo.py": {10, 11}})]
         store = Store(":memory:")
 
-        df = build_features(tmp_path, ["tests/t.py::test_x"], entries, changed, store, 9e18)
+        df = build_features(
+            tmp_path, ["tests/t.py::test_x"], entries, changed, store, 9e18
+        )
         row = df.loc["tests/t.py::test_x"]
         assert row["overlap_lines"] == 2
         assert row["overlap_ratio"] == pytest.approx(1.0)

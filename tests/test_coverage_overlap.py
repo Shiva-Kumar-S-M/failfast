@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import dataclasses
+
 import pytest
 
 from failfast.coverage_map import CoverageEntry
@@ -44,7 +46,9 @@ class TestComputeCoverageOverlap:
     def test_full_overlap_ratio_is_one(self) -> None:
         """When the test covers every changed line, ratio == 1.0."""
         changed = [make_changed_file("src/foo.py", {10, 11, 12}, set())]
-        entries = [make_entry("tests/test_foo.py::test_a", {"src/foo.py": {10, 11, 12}})]
+        entries = [
+            make_entry("tests/test_foo.py::test_a", {"src/foo.py": {10, 11, 12}})
+        ]
         result = compute_coverage_overlap(entries, changed)
         feat = result[0]
         assert feat.overlap_lines == 3
@@ -123,5 +127,5 @@ class TestComputeCoverageOverlap:
         feat = OverlapFeatures(
             node_id="t::t", overlap_lines=0, overlap_files=0, overlap_ratio=0.0
         )
-        with pytest.raises(Exception):  # frozen dataclass
+        with pytest.raises(dataclasses.FrozenInstanceError):  # frozen dataclass
             feat.overlap_lines = 1  # type: ignore[misc]
