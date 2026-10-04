@@ -55,3 +55,6 @@ failfast.db
 
 # Session handoff (local only)
 HANDOFF.md
+
+# Generated datasets (potentially large; may contain synthetic data)
+data/
