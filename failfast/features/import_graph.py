@@ -113,6 +113,9 @@ def build_import_graph(repo: Path) -> dict[str, set[str]]:
                     )
                     graph[rel].update(targets)
 
+        # Remove any self-loop (a file cannot import itself)
+        graph[rel].discard(rel)
+
     return graph
 
 
