@@ -111,7 +111,7 @@ def build_features(
     *,
     recent_n: int = 10,
     import_graph: dict[str, set[str]] | None = None,
-) -> "pd.DataFrame":
+) -> pd.DataFrame:
     """Build a feature DataFrame for a set of tests against a given diff.
 
     Args:
@@ -158,8 +158,7 @@ def build_features(
 
     # 4. Assemble rows
     rows = [
-        build_feature_row(nid, overlap_map, graph_map, history_map)
-        for nid in node_ids
+        build_feature_row(nid, overlap_map, graph_map, history_map) for nid in node_ids
     ]
 
     df = pd.DataFrame(rows)

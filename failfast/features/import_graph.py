@@ -27,7 +27,6 @@ unreachable tests sort to the bottom when features are used for ranking.
 from __future__ import annotations
 
 import ast
-import sys
 from collections import deque
 from dataclasses import dataclass
 from pathlib import Path

@@ -30,7 +30,6 @@ Usage (Python)::
 from __future__ import annotations
 
 import random
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -112,7 +111,7 @@ def _write_fixture(project: Path) -> None:
     (tests_dir / "__init__.py").write_text("", encoding="utf-8")
     (tests_dir / "test_sample.py").write_text(_TEST_SRC, encoding="utf-8")
     (project / "pyproject.toml").write_text(
-        "[tool.pytest.ini_options]\ntestpaths = [\"tests\"]\n",
+        '[tool.pytest.ini_options]\ntestpaths = ["tests"]\n',
         encoding="utf-8",
     )
 
@@ -129,7 +128,11 @@ def _apply_mutation(project: Path, mutation: tuple[str, str]) -> str:
     new_lines = mutated.splitlines(keepends=True)
 
     changed_lineno = next(
-        (i + 1 for i, (o, n) in enumerate(zip(old_lines, new_lines)) if o != n),
+        (
+            i + 1
+            for i, (o, n) in enumerate(zip(old_lines, new_lines, strict=False))
+            if o != n
+        ),
         1,
     )
 
@@ -291,9 +294,7 @@ def run_simulation(
                     import_graph=import_graph_cache,
                 )
 
-                labeled = build_labeled_dataset(
-                    feat_df, outcomes, is_synthetic=True
-                )
+                labeled = build_labeled_dataset(feat_df, outcomes, is_synthetic=True)
                 labeled["commit_sha"] = commit_sha
                 labeled["commit_timestamp"] = commit_ts
                 all_rows.append(labeled.reset_index())
@@ -310,7 +311,11 @@ def run_simulation(
         full_df = pd.DataFrame()
 
     saved_path = save_dataset(
-        full_df.set_index("node_id") if not full_df.empty and "node_id" in full_df.columns else full_df,
+        (
+            full_df.set_index("node_id")
+            if not full_df.empty and "node_id" in full_df.columns
+            else full_df
+        ),
         output_dir,
         "synthetic",
         is_synthetic=True,

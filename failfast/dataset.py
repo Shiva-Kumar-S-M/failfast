@@ -66,11 +66,11 @@ class DatasetManifest:
 
 
 def build_labeled_dataset(
-    feature_rows: "pd.DataFrame",
+    feature_rows: pd.DataFrame,
     outcome_map: dict[str, str],
     *,
     is_synthetic: bool = False,
-) -> "pd.DataFrame":
+) -> pd.DataFrame:
     """Attach labels to a feature DataFrame.
 
     Args:
@@ -85,7 +85,6 @@ def build_labeled_dataset(
         A copy of *feature_rows* with a ``label`` column (int, 0 or 1) and
         optionally an ``is_synthetic`` column.
     """
-    import pandas as pd
 
     df = feature_rows.copy()
     df["label"] = df.index.map(
@@ -97,11 +96,11 @@ def build_labeled_dataset(
 
 
 def time_split(
-    dataset: "pd.DataFrame",
+    dataset: pd.DataFrame,
     *,
     timestamp_col: str = "commit_timestamp",
     train_ratio: float = 0.8,
-) -> "tuple[pd.DataFrame, pd.DataFrame]":
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Split *dataset* into train and test sets by time order.
 
     Rows are sorted ascending by *timestamp_col*.  The first ``train_ratio``
@@ -131,7 +130,7 @@ def time_split(
 
 
 def save_dataset(
-    dataset: "pd.DataFrame",
+    dataset: pd.DataFrame,
     output_dir: Path,
     name: str,
     *,
@@ -165,15 +164,13 @@ def save_dataset(
         dataset.to_csv(out_path, index=True)
         fmt = "csv"
 
-    feature_cols = [
-        c for c in dataset.columns if c not in {"label", "is_synthetic"}
-    ]
+    feature_cols = [c for c in dataset.columns if c not in {"label", "is_synthetic"}]
 
     manifest = DatasetManifest(
         num_rows=len(dataset),
-        num_positives=int((dataset["label"] == 1).sum())
-        if "label" in dataset.columns
-        else 0,
+        num_positives=(
+            int((dataset["label"] == 1).sum()) if "label" in dataset.columns else 0
+        ),
         feature_columns=feature_cols,
         synthetic=is_synthetic,
     )
@@ -197,7 +194,7 @@ def save_dataset(
     return out_path
 
 
-def load_dataset(path: Path) -> "pd.DataFrame":
+def load_dataset(path: Path) -> pd.DataFrame:
     """Load a dataset saved by :func:`save_dataset`.
 
     Args:
